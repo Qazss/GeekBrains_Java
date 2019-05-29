@@ -1,4 +1,4 @@
-package sample;
+package Application;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +16,6 @@ public class Main extends Application {
         primaryStage.setTitle("CosmoMessenger");
         primaryStage.setScene(new Scene(root, width, height));
         primaryStage.show();
-
     }
 
     public static void main(String[] args) {

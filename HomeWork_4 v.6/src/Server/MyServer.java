@@ -3,6 +3,7 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.Vector;
 
 public class MyServer {
@@ -17,12 +18,14 @@ public class MyServer {
             server = new ServerSocket(7189);
             System.out.println("Сервер запущен");
 
+            AuthService.connect();
+
             while(true){
                 socket = server.accept();
                 System.out.println("Клиент подключен");
-                clients.add(new ClientHandler(socket, this));
+                new ClientHandler(socket, this);
             }
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -35,6 +38,7 @@ public class MyServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            AuthService.disconnect();
         }
     }
 
@@ -42,5 +46,33 @@ public class MyServer {
         for(ClientHandler o: clients){
             o.sendMessage(message);
         }
+    }
+
+    public void sendPersonalMsg(ClientHandler sender, String nickname, String message){
+        for(ClientHandler o: clients){
+            if(o.getNickname().equals(nickname) || o.getNickname().equals(sender.getNickname())){
+                o.sendMessage(message);
+            }
+        }
+    }
+
+    public boolean isNotAuthorised(String nickname){
+        boolean isNotAuthorised = true;
+
+        for(ClientHandler o: clients){
+            if(o.getNickname().equals(nickname)){
+                isNotAuthorised = false;
+                break;
+            }
+        }
+        return isNotAuthorised;
+    }
+
+    public void subscribe(ClientHandler client){
+        clients.add(client);
+    }
+
+    public void unsubscribe(ClientHandler client){
+        clients.remove(client);
     }
 }

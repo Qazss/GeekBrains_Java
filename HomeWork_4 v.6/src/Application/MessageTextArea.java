@@ -1,4 +1,4 @@
-package sample;
+package Application;
 
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
