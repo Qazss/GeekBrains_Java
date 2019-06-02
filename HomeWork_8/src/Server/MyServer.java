@@ -42,16 +42,22 @@ public class MyServer {
         }
     }
 
-    public void broadcastMessage(String message){
+    public void broadcastMessage(ClientHandler sender, String message){
         for(ClientHandler o: clients){
+            if(!AuthService.checkBlackListRecord(o.getNickname(), sender.getNickname()))
             o.sendMessage(message);
         }
     }
 
     public void sendPersonalMsg(ClientHandler sender, String nickname, String message){
         for(ClientHandler o: clients){
-            if(o.getNickname().equals(nickname) || o.getNickname().equals(sender.getNickname())){
-                o.sendMessage(message);
+            if(!AuthService.checkBlackListRecord(o.getNickname(), sender.getNickname())) {
+                if (o.getNickname().equals(nickname) || o.getNickname().equals(sender.getNickname())) {
+                    o.sendMessage(message);
+                }
+            } else {
+                sender.sendMessage("system: Вы не можете отправлять сообщения пользователю " + nickname);
+                break;
             }
         }
     }

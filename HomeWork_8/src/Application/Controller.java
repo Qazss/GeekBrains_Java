@@ -11,8 +11,10 @@ import javafx.scene.layout.VBox;
 import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class Controller{
 
@@ -138,7 +140,11 @@ public class Controller{
                 }
             }).start();
 
-        } catch (IOException e) {
+        } catch (EOFException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Вы были отключены по таймауту (120 сек)");
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
